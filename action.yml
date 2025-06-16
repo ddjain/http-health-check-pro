@@ -1,0 +1,49 @@
+name: 'HTTP Health Check Pro'
+description: 'A professional HTTP health check action with advanced features like retry logic, response time monitoring, and webhook notifications'
+author: 'Darshan Jain'
+
+# Marketplace specific metadata
+branding:
+  icon: 'activity'
+  color: 'blue'
+
+inputs:
+  url:
+    description: 'The URL to check'
+    required: true
+  expected_status:
+    description: 'Expected HTTP response status (e.g., 200)'
+    required: true
+  retry_count:
+    description: 'Number of retries before failing (default: 3)'
+    required: false
+    default: '3'
+  retry_delay:
+    description: 'Delay between retries in milliseconds (default: 1000)'
+    required: false
+    default: '1000'
+  timeout:
+    description: 'Request timeout in milliseconds (default: 5000)'
+    required: false
+    default: '5000'
+  response_time_threshold:
+    description: 'Maximum acceptable response time in milliseconds (default: 3000)'
+    required: false
+    default: '3000'
+  webhook_url:
+    description: 'Webhook URL to notify on failure'
+    required: false
+  webhook_payload:
+    description: 'JSON payload for webhook notification'
+    required: false
+    default: '{"status": "failed", "url": "${{ inputs.url }}", "expected_status": "${{ inputs.expected_status }}", "actual_status": "${{ steps.healthcheck.outputs.actual_status }}"}'
+
+outputs:
+  actual_status:
+    description: 'Actual HTTP status code returned by the server'
+  response_time:
+    description: 'Time in milliseconds taken to get the response'
+
+runs:
+  using: 'node16'
+  main: 'index.js' 
