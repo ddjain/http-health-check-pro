@@ -1,6 +1,6 @@
 {
   "name": "http-health-check-pro",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A professional GitHub Action for HTTP health checks with advanced features",
   "main": "index.js",
   "scripts": {
