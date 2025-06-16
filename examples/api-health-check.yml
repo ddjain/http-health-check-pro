@@ -1,0 +1,58 @@
+name: API Health Check
+
+on:
+  # Run on push to main branch
+  push:
+    branches: [ main ]
+  # Allow manual trigger
+  workflow_dispatch:
+  # Run on a schedule (every hour)
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Check API Health
+        uses: ddjain/http-health-check-pro@v1.0.2
+        id: healthcheck
+        with:
+          # The API endpoint to check
+          url: 'https://api.example.com/health'
+          # Expected HTTP status code
+          expected_status: '200'
+          # Retry configuration
+          retry_count: '3'
+          retry_delay: '2000'
+          # Timeout settings
+          timeout: '5000'
+          response_time_threshold: '3000'
+          # Webhook notification (optional)
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
+          webhook_payload: |
+            {
+              "text": "API Health Check Failed",
+              "url": "https://api.example.com/health",
+              "expected_status": "200",
+              "actual_status": "${{ steps.healthcheck.outputs.actual_status }}",
+              "response_time": "${{ steps.healthcheck.outputs.response_time }}",
+              "workflow_run": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
+
+      - name: Handle Success
+        if: success()
+        run: |
+          echo "API is healthy!"
+          echo "Response time: ${{ steps.healthcheck.outputs.response_time }}ms"
+          echo "Status code: ${{ steps.healthcheck.outputs.actual_status }}"
+
+      - name: Handle Failure
+        if: failure()
+        run: |
+          echo "API health check failed!"
+          echo "Please check the API status and logs"
+          exit 1 

@@ -1,7 +1,7 @@
 {
   "name": "http-health-check-pro",
-  "version": "1.0.0",
-  "description": "A professional GitHub Action for HTTP health checks with advanced features",
+  "version": "1.0.3",
+  "description": "Advanced HTTP health check with retry logic, response time monitoring, and webhook notifications",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -19,7 +19,11 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.0",
+    "@actions/github": "^6.0.0",
     "axios": "^1.6.2",
     "node-fetch": "^2.7.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 } 

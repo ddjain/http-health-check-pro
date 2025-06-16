@@ -1,0 +1,57 @@
+name: Multi-Endpoint Health Check
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        endpoint:
+          - name: 'API Health'
+            url: 'https://api.example.com/health'
+            expected_status: '200'
+          - name: 'Database Status'
+            url: 'https://api.example.com/db/status'
+            expected_status: '200'
+          - name: 'Cache Service'
+            url: 'https://api.example.com/cache/status'
+            expected_status: '200'
+          - name: 'Auth Service'
+            url: 'https://api.example.com/auth/status'
+            expected_status: '200'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Check ${{ matrix.endpoint.name }}
+        uses: ddjain/http-health-check-pro@v1.0.2
+        id: healthcheck
+        with:
+          url: ${{ matrix.endpoint.url }}
+          expected_status: ${{ matrix.endpoint.expected_status }}
+          retry_count: '2'
+          retry_delay: '1000'
+          timeout: '3000'
+          response_time_threshold: '2000'
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
+          webhook_payload: |
+            {
+              "text": "Service Health Check Failed",
+              "service": "${{ matrix.endpoint.name }}",
+              "url": "${{ matrix.endpoint.url }}",
+              "expected_status": "${{ matrix.endpoint.expected_status }}",
+              "actual_status": "${{ steps.healthcheck.outputs.actual_status }}",
+              "response_time": "${{ steps.healthcheck.outputs.response_time }}",
+              "workflow_run": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
+
+      - name: Log Results
+        run: |
+          echo "Service: ${{ matrix.endpoint.name }}"
+          echo "Status: ${{ steps.healthcheck.outputs.actual_status }}"
+          echo "Response Time: ${{ steps.healthcheck.outputs.response_time }}ms" 
