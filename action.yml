@@ -36,7 +36,7 @@ inputs:
   webhook_payload:
     description: 'JSON payload for webhook notification'
     required: false
-    default: '{"status": "failed", "url": "${{ inputs.url }}", "expected_status": "${{ inputs.expected_status }}", "actual_status": "${{ steps.healthcheck.outputs.actual_status }}"}'
+    default: '{"status": "failed", "message": "Health check failed"}'
 
 outputs:
   actual_status:
