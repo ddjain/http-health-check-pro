@@ -1,6 +1,6 @@
 # HTTP Health Check Pro
 
-A professional GitHub Action that performs HTTP health checks on specified URLs with advanced features like retry logic, response time monitoring, and webhook notifications. Perfect for ensuring your services are up and running before or after deployment.
+Advanced HTTP health check with retry logic, response time monitoring, and webhook notifications. Perfect for ensuring your services are up and running.
 
 ## 🚀 Features
 

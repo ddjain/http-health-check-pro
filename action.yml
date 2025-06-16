@@ -1,5 +1,5 @@
 name: 'HTTP Health Check Pro'
-description: 'A professional HTTP health check action with advanced features like retry logic, response time monitoring, and webhook notifications'
+description: 'Advanced HTTP health check with retry logic, response time monitoring, and webhook notifications'
 author: 'Darshan Jain'
 
 # Marketplace specific metadata
